@@ -19,7 +19,7 @@ import zipfile
 
 
 
-INPUT_DIR = 'opt/dkube/input'
+INPUT_DIR = '/opt/dkube/input'
 OUTPUT_DIR = '/opt/dkube/output'
 
 with zipfile.ZipFile(os.path.join(INPUT_DIR, 'balloon_dataset.zip'), 'r') as zip_ref:
