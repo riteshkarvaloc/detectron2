@@ -16,11 +16,19 @@ from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.engine import DefaultTrainer
 from detectron2.structures import BoxMode
 import zipfile
+import argparse
 
 
 
 INPUT_DIR = '/opt/dkube/input'
 OUTPUT_DIR = '/opt/dkube/output'
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--device", dest="device", default="cuda", type=str, help="device cpu or cuda")
+global FLAGS
+FLAGS, unparsed = parser.parse_known_args()
+device = FLAGS.device
+
 
 with zipfile.ZipFile(os.path.join(INPUT_DIR, 'balloon_dataset.zip'), 'r') as zip_ref:
     zip_ref.extractall('./')
@@ -81,6 +89,7 @@ cfg.SOLVER.BASE_LR = 0.00025  # pick a good LR
 cfg.SOLVER.MAX_ITER = 300    # 300 iterations seems good enough for this toy dataset; you will need to train longer for a practical dataset
 cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 128   # faster, and good enough for this toy dataset (default: 512)
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (ballon). (see https://detectron2.readthedocs.io/tutorials/datasets.html#update-the-config-for-new-datasets)
+cfg.MODEL.DEVICE = device
 # NOTE: this config means the number of classes, but a few popular unofficial tutorials incorrect uses num_classes+1 here.
 
 os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
